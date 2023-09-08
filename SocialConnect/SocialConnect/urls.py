@@ -1,11 +1,13 @@
 from django.urls import path
 from django.contrib import admin
+from .views import home_view
 # from authentication.views import signup_with_email_verification, home, account_activation_sent
 # from authentication import forms
 # from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
+    path(r'', home_view),
     # path(r'^register/', signup_with_email_verification, name='register'),
     # path(r'^home/$', home, name='home'),
     # path(r'^login/$', auth_views.login,{'template_name':'login.html','authentication_form':forms.LoginForm}, name='login'),
