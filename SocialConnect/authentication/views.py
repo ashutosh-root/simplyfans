@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from . import forms
@@ -7,9 +7,44 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from . import tokens
+from .backends import EmailBackend
+from django.conf import settings
+import json as simplejson
 
-def home(request):
-    return render(request, 'home.html')
+from django.http import HttpResponse
+
+def login_view(request):
+    # import pdb;pdb.set_trace()
+    # STATIC_URL = settings.STATIC_URL
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    response = {
+        'success': True,
+        'message': '',
+    }
+    try:
+        user = User.objects.get(email=email)
+    except:
+        user = None
+    if not user:
+        response["message"] = "Invalid email"
+        response["success"] = False
+        data = simplejson.dumps(response)
+        return HttpResponse(data)
+    auth_backend = EmailBackend()
+    user = auth_backend.authenticate(request, username=email , password=password)
+    if not user:
+        response["message"] = "Invalid credentials"
+        response["success"] = False
+        data = simplejson.dumps(response)
+        return HttpResponse(data)
+    login(request, user)
+    response["message"] = "Welcome {} , we will get back to you soon with some home page".format(user.username)
+    data = simplejson.dumps(response)
+    return HttpResponse(data)
+
+
+
 
 
 def signup_with_email_verification(request):

@@ -72,24 +72,24 @@ WSGI_APPLICATION = 'SocialConnect.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        # The last part of ENGINE is 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'ado_mssql'.
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'socialconnect',  # Or path to database file if using sqlite3
-        'USER': 'root',  # Not used with sqlite3.
-        'PASSWORD': 'root',  # Not used with sqlite3.
-        'HOST': '172.17.0.2',  # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         # The last part of ENGINE is 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'ado_mssql'.
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'socialconnect',  # Or path to database file if using sqlite3
+#         'USER': 'root',  # Not used with sqlite3.
+#         'PASSWORD': 'root',  # Not used with sqlite3.
+#         'HOST': '172.17.0.2',  # Set to empty string for localhost. Not used with sqlite3.
+#         'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
+#     }
+# }
 
 
 # Password validation
@@ -140,4 +140,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-print(STATICFILES_DIRS)
+
+AUTHENTICATION_BACKENDS = ['authentication.backends.EmailBackend']

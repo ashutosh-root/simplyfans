@@ -6,29 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="http://kit.fontawesome.com/3477ae541c.js" crossorigin="anonymous"></script>
     <title>Document</title>
-<!--    <link rel="stylesheet" href="style.css">-->
-    <link rel="stylesheet" type="text/css" href="static/css/style.css" />
-    <link rel="icon" type="image/x-icon" href="static/images/favicon-01.png">
+    <!--    <link rel="stylesheet" href="style.css">-->
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/style.css"/>
+    <link rel="icon" type="image/x-icon" href="{{ STATIC_URL }}images/favicon-01.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="{{ STATIC_URL }}js/new.jquery.form.js"></script>
 </head>
 <body>
-    <div class="sub_container">
-    <div class="container">
+<div class="sub_container">
+    <div class="container" id="container1">
         <div class="side">
-            <img src="static/images/f-logo.png" alt="">
+            <img src="{{ STATIC_URL }}images/f-logo.png" alt="">
             <!--<p>Sign up to support your favorite creators</p>-->
         </div>
-        <form action="" class="form">
+        <form action="#" class="form" id="login_form">
             <h2>Log in</h2>
-            <input type="email" name="email" class="box" placeholder="Enter Email">
-            <input type="password" name="password" class="box" placeholder="Enter Password">
-            <input type="submit" value="LOG IN" id="submit">
+            {% csrf_token %}
+            <div id="error_message" style="display: none;color: red"></div>
+            <input type="email" name="email" class="box" placeholder="Enter Email" required>
+            <input type="password" name="password" class="box" placeholder="Enter Password" required>
+            <input type="button" value="LOG IN" id="submit" onclick="goForlogin(event)">
             <a href="#">Forgot Password? Sign up for XYZ</a>
             <i class="fa-brands fa-twitter"><a href="#">SIGN IN WITH TWITTER</a></i>
             <i class="fa-brands fa-google"><a href="#">SIGN IN WITH GOOGLE</a></i>
         </form>
 
     </div>
+
+    <div class="container" style="display: none" id="container2">
+<!--        <div class="side">-->
+<!--            <img src="{{ STATIC_URL }}images/f-logo.png" alt="">-->
+<!--            &lt;!&ndash;<p>Sign up to support your favorite creators</p>&ndash;&gt;-->
+<!--        </div>-->
+        <div id="success_message" style="color: green;text-align: center;font-size: 32px"></div>
+
     </div>
+</div>
+
+<script>
+    function goForlogin(e) {
+        e.preventDefault()
+        var url = "{% url 'login_url' %}"
+        $.ajax({
+            url: url,
+            async: false,
+            data: $('#login_form').serialize(),
+            type: 'post',
+            success: function (response) {
+                resp = jQuery.parseJSON(response)
+                if (resp.success == true) {
+                    $('#container2').show()
+                    $('#success_message').html(resp.message)
+                    $('#container1').hide()
+                } else {
+                    $('#container1').show()
+                    $('#success_message').html('')
+                    $('#error_message').html(resp.message)
+                    $('#error_message').show()
+                    $('#container2').hide()
+                }
+                return
+            }
+        });
+    };
+</script>
 
 </body>
 </html>
